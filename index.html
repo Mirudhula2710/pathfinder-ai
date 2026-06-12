@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PathfinderAI — Your CS Career Roadmap</title>
+<meta name="description" content="PathfinderAI gives every CS student a free, personalized week-by-week career roadmap with curated resources and skill gap analysis.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--surface:#13131a;--card:#1a1a24;--border:#2a2a3a;--accent:#7c6af7;--accent2:#f7a26a;--text:#e8e8f0;--muted:#6b6b80;--success:#4ade80;--warning:#fbbf24;--mono:'JetBrains Mono',monospace;--sans:'Space Grotesk',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh;overflow-x:hidden;}
+
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;width:600px;height:600px;background:radial-gradient(circle,rgba(124,106,247,0.15) 0%,transparent 70%);top:-100px;left:50%;transform:translateX(-50%);pointer-events:none;}
+.badge{font-family:var(--mono);font-size:0.7rem;letter-spacing:0.15em;color:var(--accent);border:1px solid rgba(124,106,247,0.3);padding:0.35rem 0.9rem;border-radius:100px;margin-bottom:2rem;background:rgba(124,106,247,0.08);}
+h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;line-height:1.1;text-align:center;margin-bottom:1.2rem;letter-spacing:-0.02em;}
+h1 span{background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.subtitle{font-size:1.1rem;color:var(--muted);text-align:center;max-width:560px;line-height:1.7;margin-bottom:1rem;}
+.hero-features{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;}
+.hero-feat{font-size:0.8rem;color:var(--muted);display:flex;align-items:center;gap:0.4rem;}
+.hero-feat span{color:var(--success);}
+
+/* FORM */
+.form-card{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:2.5rem;width:100%;max-width:640px;position:relative;}
+.form-card::before{content:'';position:absolute;inset:-1px;border-radius:21px;background:linear-gradient(135deg,rgba(124,106,247,0.3),transparent,rgba(247,162,106,0.2));z-index:-1;}
+.form-title{font-size:1rem;font-weight:600;margin-bottom:1.8rem;display:flex;align-items:center;gap:0.5rem;}
+.form-title::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--success);box-shadow:0 0 8px var(--success);}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem;}
+.field{margin-bottom:1rem;}
+label{display:block;font-size:0.78rem;font-weight:500;color:var(--muted);margin-bottom:0.4rem;letter-spacing:0.05em;text-transform:uppercase;}
+input,select,textarea{width:100%;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;color:var(--text);font-family:var(--sans);font-size:0.9rem;transition:border-color 0.2s,box-shadow 0.2s;outline:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(124,106,247,0.15);}
+input.invalid{border-color:#ef4444;}
+select option{background:var(--card);}
+textarea{resize:vertical;min-height:70px;}
+
+/* CHIPS */
+.multi-select-wrap{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.4rem;}
+.ms-chip{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:0.45rem 0.8rem;font-size:0.82rem;cursor:pointer;transition:all 0.15s;user-select:none;color:var(--muted);}
+.ms-chip:hover{border-color:var(--accent);color:var(--text);}
+.ms-chip.selected{background:rgba(124,106,247,0.15);border-color:var(--accent);color:var(--accent);}
+.ms-chip.selected-skill{background:rgba(247,162,106,0.12);border-color:var(--accent2);color:var(--accent2);}
+.ms-hint{font-size:0.72rem;color:var(--muted);margin-top:0.5rem;}
+
+/* OTHER INPUT */
+.other-input-wrap{display:none;margin-top:0.6rem;}
+.other-input-wrap.show{display:flex;gap:0.5rem;align-items:center;}
+.other-input-wrap input{flex:1;padding:0.55rem 0.9rem;font-size:0.85rem;}
+.other-add-btn{background:var(--accent);border:none;border-radius:8px;color:white;padding:0.55rem 0.9rem;font-size:0.82rem;cursor:pointer;white-space:nowrap;font-family:var(--sans);}
+.other-add-btn:hover{background:#6155e0;}
+.custom-chips{display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;}
+.custom-chip{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);color:var(--success);border-radius:8px;padding:0.35rem 0.7rem;font-size:0.8rem;display:flex;align-items:center;gap:0.4rem;}
+.custom-chip-remove{cursor:pointer;opacity:0.7;font-size:0.9rem;line-height:1;}
+.custom-chip-remove:hover{opacity:1;}
+
+/* COUNTRY SECTION */
+.country-section{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem;}
+.country-section-label{font-size:0.78rem;font-weight:500;color:var(--muted);margin-bottom:0.8rem;letter-spacing:0.05em;text-transform:uppercase;display:flex;align-items:center;gap:0.5rem;}
+.optional-badge{font-size:0.65rem;background:rgba(107,107,128,0.2);color:var(--muted);padding:0.15rem 0.5rem;border-radius:100px;text-transform:none;letter-spacing:0;}
+
+.btn{width:100%;padding:1rem;background:linear-gradient(135deg,var(--accent),#6155e0);border:none;border-radius:12px;color:white;font-family:var(--sans);font-size:1rem;font-weight:600;cursor:pointer;margin-top:0.5rem;transition:transform 0.2s,box-shadow 0.2s,opacity 0.2s;}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,106,247,0.4);}
+.btn:disabled{opacity:0.6;cursor:not-allowed;transform:none;}
+.error-msg{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;border-radius:10px;padding:1rem;margin-top:1rem;font-size:0.85rem;display:none;}
+
+/* LOADING */
+.loading{display:none;text-align:center;padding:4rem 2rem;max-width:580px;width:100%;}
+.loading.show{display:block;}
+.spinner{width:48px;height:48px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1.5rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-size:1rem;font-weight:600;margin-bottom:0.8rem;}
+.loading-steps{font-family:var(--mono);font-size:0.8rem;color:var(--muted);line-height:2.2;}
+.loading-steps span{display:block;opacity:0;animation:fadeUp 0.5s forwards;}
+.loading-steps span:nth-child(1){animation-delay:0.2s;}
+.loading-steps span:nth-child(2){animation-delay:1.5s;}
+.loading-steps span:nth-child(3){animation-delay:3s;}
+.loading-steps span:nth-child(4){animation-delay:4.5s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ROADMAP */
+#roadmapSection{display:none;padding:3rem 1rem 2rem;max-width:900px;margin:0 auto;}
+.roadmap-header{text-align:center;margin-bottom:1.5rem;}
+.roadmap-goal{color:var(--accent);font-family:var(--mono);font-size:0.85rem;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.roadmap-name{font-size:2rem;font-weight:700;margin-bottom:1rem;}
+.roadmap-summary{color:var(--muted);max-width:620px;margin:0 auto 1.5rem;line-height:1.7;}
+.roadmap-description{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem 1.5rem;max-width:680px;margin:0 auto 2.5rem;font-size:0.9rem;line-height:1.75;color:var(--text);}
+.roadmap-description strong{color:var(--accent2);}
+
+/* REASONING */
+.reasoning-panel{background:var(--surface);border:1px solid rgba(124,106,247,0.3);border-radius:16px;padding:1.5rem;margin-bottom:2.5rem;}
+.reasoning-title{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:1.2rem;display:flex;align-items:center;gap:0.5rem;}
+.reasoning-title::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 6px var(--accent);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.reasoning-steps{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.reasoning-step{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;opacity:0;transform:translateY(8px);transition:opacity 0.5s ease,transform 0.5s ease;}
+.reasoning-step.visible{opacity:1;transform:none;}
+.r-step-label{font-family:var(--mono);font-size:0.65rem;color:var(--accent2);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.5rem;}
+.r-step-text{font-size:0.83rem;color:var(--muted);line-height:1.6;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2.5rem;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.2rem;text-align:center;}
+.stat-number{font-size:2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-label{font-size:0.75rem;color:var(--muted);margin-top:0.3rem;text-transform:uppercase;letter-spacing:0.08em;}
+.section-label{font-family:var(--mono);font-size:0.72rem;letter-spacing:0.12em;color:var(--accent);text-transform:uppercase;margin-bottom:1rem;}
+
+/* GAPS */
+.gaps{display:flex;flex-wrap:wrap;gap:0.6rem;margin-bottom:2.5rem;}
+.gap-tag{background:rgba(247,162,106,0.1);border:1px solid rgba(247,162,106,0.3);color:var(--accent2);padding:0.4rem 0.9rem;border-radius:100px;font-size:0.82rem;}
+
+/* PROGRESS */
+.progress-bar-wrap{margin-bottom:2.5rem;}
+.progress-track{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.2rem 1.5rem;margin-bottom:0.8rem;}
+.progress-track-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem;}
+.progress-track-label{font-size:0.82rem;font-weight:500;}
+.progress-pct{font-family:var(--mono);font-size:0.75rem;color:var(--muted);}
+.progress-reason{font-size:0.75rem;color:var(--muted);margin-bottom:0.7rem;}
+.progress-bar-container{position:relative;height:8px;background:var(--border);border-radius:100px;overflow:hidden;}
+.progress-fill-current{height:100%;border-radius:100px;background:var(--muted);transition:width 1s ease;position:absolute;left:0;top:0;}
+.progress-fill-target{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1.4s ease;position:absolute;left:0;top:0;opacity:0.35;}
+.progress-legend{display:flex;gap:1rem;margin-top:0.5rem;font-size:0.7rem;color:var(--muted);}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle;}
+
+/* WEEKS */
+.weeks{display:flex;flex-direction:column;gap:1.2rem;margin-bottom:2.5rem;}
+.week-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem;position:relative;overflow:hidden;transition:border-color 0.2s;}
+.week-card:hover{border-color:rgba(124,106,247,0.4);}
+.week-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--accent),var(--accent2));}
+.week-header{display:flex;align-items:center;gap:1rem;margin-bottom:0.8rem;cursor:pointer;}
+.week-number{font-family:var(--mono);font-size:0.72rem;color:var(--accent);background:rgba(124,106,247,0.1);border:1px solid rgba(124,106,247,0.2);padding:0.25rem 0.6rem;border-radius:6px;white-space:nowrap;}
+.week-title{font-weight:600;font-size:1rem;flex:1;}
+.week-res-count{font-family:var(--mono);font-size:0.65rem;color:var(--muted);background:var(--card);border:1px solid var(--border);padding:0.2rem 0.5rem;border-radius:6px;white-space:nowrap;}
+.week-toggle{font-size:1.2rem;color:var(--muted);transition:transform 0.2s;user-select:none;}
+.week-toggle.open{transform:rotate(180deg);}
+.week-focus{font-size:0.85rem;color:var(--muted);margin-bottom:1rem;line-height:1.6;}
+.week-body{display:none;}
+.week-body.open{display:block;}
+.tasks-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.6rem;}
+.task-list{list-style:none;margin-bottom:1rem;}
+.task-list li{padding:0.45rem 0;padding-left:1.4rem;position:relative;font-size:0.88rem;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:0.6rem;}
+.task-list li:last-child{border-bottom:none;}
+.task-list li::before{content:'→';position:absolute;left:0;color:var(--accent);font-family:var(--mono);}
+.task-check{width:15px;height:15px;cursor:pointer;flex-shrink:0;margin-top:3px;margin-left:-1.4rem;position:relative;z-index:1;accent-color:var(--accent);}
+
+/* RESOURCE CARDS — improved */
+.resources-list{display:flex;flex-direction:column;gap:0.6rem;margin-bottom:1rem;}
+.resource-card{display:flex;align-items:center;gap:0.8rem;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;text-decoration:none;transition:border-color 0.2s,transform 0.15s;color:var(--text);}
+.resource-card:hover{border-color:var(--accent);transform:translateX(3px);}
+.resource-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+.resource-icon.youtube{background:rgba(255,0,0,0.12);}
+.resource-icon.website{background:rgba(124,106,247,0.12);}
+.resource-icon.course{background:rgba(74,222,128,0.12);}
+.resource-icon.book{background:rgba(247,162,106,0.12);}
+.resource-body{flex:1;min-width:0;}
+.resource-title{font-size:0.87rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.resource-meta{display:flex;align-items:center;gap:0.4rem;margin-top:0.15rem;}
+.resource-type-badge{font-family:var(--mono);font-size:0.63rem;color:var(--muted);background:rgba(107,107,128,0.15);padding:0.1rem 0.4rem;border-radius:4px;text-transform:uppercase;}
+.resource-link-text{font-size:0.72rem;color:var(--accent);opacity:0.8;}
+.resource-arrow{color:var(--muted);font-size:0.9rem;flex-shrink:0;transition:color 0.2s;}
+.resource-card:hover .resource-arrow{color:var(--accent);}
+
+.milestone{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:0.7rem 1rem;font-size:0.83rem;color:var(--success);display:flex;align-items:flex-start;gap:0.6rem;}
+
+/* TIPS */
+.tips-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;margin-bottom:2.5rem;}
+.tip-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem;font-size:0.85rem;line-height:1.6;display:flex;gap:0.7rem;align-items:flex-start;}
+.tip-icon{color:var(--accent2);flex-shrink:0;}
+
+/* MOTIVATION */
+.motivation-card{background:linear-gradient(135deg,rgba(124,106,247,0.1),rgba(247,162,106,0.05));border:1px solid rgba(124,106,247,0.25);border-radius:16px;padding:2rem;text-align:center;font-size:1.05rem;line-height:1.7;margin-bottom:2rem;}
+.restart-btn{display:block;margin:0 auto 3rem;background:transparent;border:1px solid var(--border);color:var(--muted);padding:0.75rem 2rem;border-radius:10px;font-family:var(--sans);font-size:0.9rem;cursor:pointer;transition:border-color 0.2s,color 0.2s;}
+.restart-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* CHATBOT */
+.chat-fab{position:fixed;bottom:2rem;right:2rem;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#6155e0);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 4px 20px rgba(124,106,247,0.5);transition:transform 0.2s,box-shadow 0.2s;z-index:100;}
+.chat-fab:hover{transform:scale(1.08);}
+.chat-badge{position:absolute;top:-3px;right:-3px;background:var(--success);border-radius:50%;width:14px;height:14px;border:2px solid var(--bg);}
+.chat-window{position:fixed;bottom:5.5rem;right:2rem;width:360px;max-height:520px;background:var(--surface);border:1px solid var(--border);border-radius:20px;display:flex;flex-direction:column;z-index:100;box-shadow:0 20px 60px rgba(0,0,0,0.5);overflow:hidden;transform:scale(0.95) translateY(10px);opacity:0;pointer-events:none;transition:all 0.2s ease;}
+.chat-window.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+.chat-header{padding:1rem 1.2rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:0.7rem;}
+.chat-header-icon{font-size:1.2rem;}
+.chat-header-text{flex:1;}
+.chat-header-name{font-weight:600;font-size:0.9rem;}
+.chat-header-status{font-size:0.72rem;color:var(--success);font-family:var(--mono);}
+.chat-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:0.2rem;}
+.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:0.8rem;min-height:0;}
+.chat-messages::-webkit-scrollbar{width:4px;}
+.chat-messages::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.chat-msg{max-width:88%;padding:0.7rem 0.9rem;border-radius:12px;font-size:0.85rem;line-height:1.55;}
+.chat-msg.bot{background:var(--card);border:1px solid var(--border);color:var(--text);border-radius:12px 12px 12px 2px;align-self:flex-start;}
+.chat-msg.user{background:linear-gradient(135deg,var(--accent),#6155e0);color:white;border-radius:12px 12px 2px 12px;align-self:flex-end;}
+.chat-msg.typing{color:var(--muted);font-style:italic;}
+.chat-suggestions{padding:0 1rem 0.6rem;display:flex;flex-wrap:wrap;gap:0.4rem;}
+.chat-sug{background:var(--card);border:1px solid var(--border);border-radius:100px;padding:0.3rem 0.7rem;font-size:0.75rem;cursor:pointer;color:var(--muted);transition:all 0.15s;white-space:nowrap;}
+.chat-sug:hover{border-color:var(--accent);color:var(--accent);}
+.chat-input-wrap{padding:0.8rem 1rem;border-top:1px solid var(--border);display:flex;gap:0.6rem;align-items:flex-end;}
+.chat-input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.6rem 0.8rem;color:var(--text);font-family:var(--sans);font-size:0.85rem;resize:none;outline:none;max-height:100px;overflow-y:auto;}
+.chat-input:focus{border-color:var(--accent);}
+.chat-send{background:var(--accent);border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:white;flex-shrink:0;transition:background 0.15s;}
+.chat-send:hover{background:#6155e0;}
+.chat-send:disabled{opacity:0.5;cursor:not-allowed;}
+
+.footer{text-align:center;padding:1.5rem;font-size:0.75rem;color:var(--muted);border-top:1px solid var(--border);}
+.footer a{color:var(--accent);text-decoration:none;}
+
+@media(max-width:600px){
+  .field-row,.stats-row,.tips-grid,.reasoning-steps{grid-template-columns:1fr;}
+  h1{font-size:2rem;}.form-card{padding:1.5rem;}
+  .chat-window{width:calc(100vw - 2rem);right:1rem;}
+}
+</style>
+</head>
+<body>
+
+<section class="hero" id="heroSection">
+  <div class="badge">Microsoft Agents League Hackathon 2026</div>
+  <h1>Your CS Career<br><span>Roadmap, Personalized.</span></h1>
+  <p class="subtitle">PathfinderAI is a free AI mentor for Computer Science students worldwide. Tell it your goals and current skills — it reasons through your profile and builds a personalized week-by-week plan with free resources, skill gap analysis, and a built-in career chatbot.</p>
+  <div class="hero-features">
+    <div class="hero-feat"><span>✦</span> Multi-goal roadmaps</div>
+    <div class="hero-feat"><span>✦</span> Real skill gap analysis</div>
+    <div class="hero-feat"><span>✦</span> Free resources only</div>
+    <div class="hero-feat"><span>✦</span> AI career chatbot</div>
+    <div class="hero-feat"><span>✦</span> Works for students worldwide</div>
+  </div>
+
+  <div class="form-card" id="formCard">
+    <div class="form-title">Build My Roadmap</div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Your Name <span style="color:#ef4444">*</span></label>
+        <input type="text" id="name" placeholder="e.g. Mirudhula" />
+      </div>
+      <div class="field">
+        <label>Current Year</label>
+        <select id="year">
+          <option>1st Year</option><option>2nd Year</option><option>3rd Year</option><option>4th Year</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Your College / University</label>
+      <input type="text" id="college" placeholder="e.g. SRMIST, MIT, NUS, UCL..." />
+    </div>
+
+    <!-- COUNTRY SECTION -->
+    <div class="country-section">
+      <div class="country-section-label">
+        🌍 Country Details
+        <span class="optional-badge">Optional</span>
+      </div>
+      <div class="field-row" style="margin-bottom:0;">
+        <div class="field" style="margin-bottom:0;">
+          <label>Country you're currently in</label>
+          <select id="currentCountry">
+            <option value="">— Select country —</option>
+            <option>India</option><option>USA</option><option>UK</option><option>Canada</option>
+            <option>Australia</option><option>Germany</option><option>Singapore</option>
+            <option>UAE</option><option>Malaysia</option><option>Nigeria</option>
+            <option>Brazil</option><option>Philippines</option><option>Indonesia</option>
+            <option>Bangladesh</option><option>Pakistan</option><option>Sri Lanka</option>
+            <option>Nepal</option><option>Kenya</option><option>South Africa</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field" style="margin-bottom:0;">
+          <label>Country you want to work / settle in</label>
+          <select id="aspiringCountry">
+            <option value="">— Select country —</option>
+            <option>India</option><option>USA</option><option>UK</option><option>Canada</option>
+            <option>Australia</option><option>Germany</option><option>Singapore</option>
+            <option>UAE</option><option>Malaysia</option><option>Netherlands</option>
+            <option>Sweden</option><option>Switzerland</option><option>New Zealand</option>
+            <option>Japan</option><option>South Korea</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Your Current Skills (be honest) <span style="color:#ef4444">*</span></label>
+      <input type="text" id="skills" placeholder="e.g. Basic Python, HTML, some C programming" />
+    </div>
+
+    <!-- MULTI-SELECT GOALS -->
+    <div class="field">
+      <label>Your Goals <span style="color:#ef4444">*</span> — select all that apply</label>
+      <div class="multi-select-wrap" id="goalsWrap">
+        <div class="ms-chip" data-val="Get placed in a product-based company (FAANG/MAANG)" onclick="toggleChip(this,'goals')">🏢 FAANG/MAANG</div>
+        <div class="ms-chip" data-val="Get placed in a service-based company" onclick="toggleChip(this,'goals')">💼 Service company</div>
+        <div class="ms-chip" data-val="Build my own startup" onclick="toggleChip(this,'goals')">🚀 Startup</div>
+        <div class="ms-chip" data-val="Crack GATE exam" onclick="toggleChip(this,'goals')">📝 GATE exam</div>
+        <div class="ms-chip" data-val="Get into MS abroad" onclick="toggleChip(this,'goals')">🎓 MS abroad</div>
+        <div class="ms-chip" data-val="Become a Full Stack Developer" onclick="toggleChip(this,'goals')">🌐 Full Stack Dev</div>
+        <div class="ms-chip" data-val="Become an AI/ML Engineer" onclick="toggleChip(this,'goals')">🤖 AI/ML Engineer</div>
+        <div class="ms-chip" data-val="Win competitive programming contests" onclick="toggleChip(this,'goals')">🏆 Competitive Prog.</div>
+        <div class="ms-chip" data-val="Get an internship" onclick="toggleChip(this,'goals')">🔍 Get internship</div>
+        <div class="ms-chip ms-chip-other" onclick="showOther('goals')">✏️ Other...</div>
+      </div>
+      <div class="other-input-wrap" id="goalOtherWrap">
+        <input type="text" id="goalOtherInput" placeholder="Type your custom goal..." />
+        <button class="other-add-btn" onclick="addOther('goals')">Add</button>
+      </div>
+      <div class="custom-chips" id="goalCustomChips"></div>
+      <div class="ms-hint">Select multiple — the AI combines them into one roadmap.</div>
+    </div>
+
+    <!-- MULTI-SELECT SKILLS TO LEARN -->
+    <div class="field">
+      <label>Skills You Want to Build — select all that apply</label>
+      <div class="multi-select-wrap" id="skillsWrap">
+        <div class="ms-chip" data-val="Data Structures & Algorithms (DSA)" onclick="toggleChip(this,'skills')">DSA</div>
+        <div class="ms-chip" data-val="Web Development (HTML/CSS/JS/React)" onclick="toggleChip(this,'skills')">Web Dev</div>
+        <div class="ms-chip" data-val="Machine Learning & AI" onclick="toggleChip(this,'skills')">ML/AI</div>
+        <div class="ms-chip" data-val="System Design" onclick="toggleChip(this,'skills')">System Design</div>
+        <div class="ms-chip" data-val="Database & SQL" onclick="toggleChip(this,'skills')">Database/SQL</div>
+        <div class="ms-chip" data-val="Python programming" onclick="toggleChip(this,'skills')">Python</div>
+        <div class="ms-chip" data-val="Java programming" onclick="toggleChip(this,'skills')">Java</div>
+        <div class="ms-chip" data-val="C++ programming" onclick="toggleChip(this,'skills')">C++</div>
+        <div class="ms-chip" data-val="Cloud Computing (AWS/Azure/GCP)" onclick="toggleChip(this,'skills')">Cloud</div>
+        <div class="ms-chip" data-val="DevOps & Git" onclick="toggleChip(this,'skills')">DevOps/Git</div>
+        <div class="ms-chip" data-val="Mobile App Development" onclick="toggleChip(this,'skills')">Mobile Dev</div>
+        <div class="ms-chip" data-val="Competitive Programming" onclick="toggleChip(this,'skills')">Comp. Prog.</div>
+        <div class="ms-chip" data-val="Cybersecurity" onclick="toggleChip(this,'skills')">Cybersecurity</div>
+        <div class="ms-chip" data-val="Blockchain & Web3" onclick="toggleChip(this,'skills')">Blockchain</div>
+        <div class="ms-chip ms-chip-other" onclick="showOther('skills')">✏️ Other...</div>
+      </div>
+      <div class="other-input-wrap" id="skillOtherWrap">
+        <input type="text" id="skillOtherInput" placeholder="Type a custom skill..." />
+        <button class="other-add-btn" onclick="addOther('skills')">Add</button>
+      </div>
+      <div class="custom-chips" id="skillCustomChips"></div>
+    </div>
+
+    <div class="field">
+      <label>Target Company / University (optional)</label>
+      <input type="text" id="target" placeholder="e.g. Google, Microsoft, IIT Bombay, NUS, UT Austin" />
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Study hours per day</label>
+        <select id="hoursPerDay">
+          <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Timeline (months)</label>
+        <select id="timeline">
+          <option>1</option><option>2</option><option selected>3</option><option>6</option><option>12</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Anything else we should know?</label>
+      <textarea id="context" placeholder="e.g. I have exams in July, I struggle with math, I prefer videos over reading..."></textarea>
+    </div>
+
+    <button class="btn" onclick="generateRoadmap()" id="generateBtn">✦ Generate My Roadmap</button>
+    <div class="error-msg" id="errorMsg"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingTitle">Building your roadmap...</div>
+    <div class="loading-steps">
+      <span id="ls1">⟳ Analysing your profile...</span>
+      <span id="ls2">⟳ Identifying skill gaps...</span>
+      <span id="ls3">⟳ Mapping free resources...</span>
+      <span id="ls4">⟳ Building your personalised roadmap...</span>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP OUTPUT -->
+<section id="roadmapSection">
+  <div class="roadmap-header">
+    <div class="roadmap-goal" id="outputGoal"></div>
+    <div class="roadmap-name" id="outputName"></div>
+    <div class="roadmap-summary" id="outputSummary"></div>
+  </div>
+  <div class="roadmap-description" id="outputDescription"></div>
+
+  <div style="max-width:900px;margin:0 auto;padding:0 1rem;">
+    <div class="section-label">How the AI reasoned about you</div>
+    <div class="reasoning-panel">
+      <div class="reasoning-title">Agent Reasoning Steps</div>
+      <div class="reasoning-steps">
+        <div class="reasoning-step" id="rs1"><div class="r-step-label">Step 1 — Profile Analysis</div><div class="r-step-text" id="r1"></div></div>
+        <div class="reasoning-step" id="rs2"><div class="r-step-label">Step 2 — Gap Analysis</div><div class="r-step-text" id="r2"></div></div>
+        <div class="reasoning-step" id="rs3"><div class="r-step-label">Step 3 — Strategy</div><div class="r-step-text" id="r3"></div></div>
+        <div class="reasoning-step" id="rs4"><div class="r-step-label">Step 4 — Timeline Logic</div><div class="r-step-text" id="r4"></div></div>
+      </div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-number" id="statWeeks">-</div><div class="stat-label">Weeks Planned</div></div>
+      <div class="stat-card"><div class="stat-number" id="statGaps">-</div><div class="stat-label">Skill Gaps Found</div></div>
+      <div class="stat-card"><div class="stat-number" id="statResources">-</div><div class="stat-label">Free Resources</div></div>
+    </div>
+
+    <div class="section-label">Skills to build</div>
+    <div class="gaps" id="outputGaps"></div>
+
+    <div class="section-label">Your skill gap analysis</div>
+    <div class="progress-bar-wrap" id="outputProgress"></div>
+
+    <div class="section-label">Your Week-by-Week Plan</div>
+    <div class="weeks" id="outputWeeks"></div>
+
+    <div class="section-label">Tips for You</div>
+    <div class="tips-grid" id="outputTips"></div>
+
+    <div class="section-label" style="margin-top:2rem;">A message for you</div>
+    <div class="motivation-card" id="outputMotivation"></div>
+    <button class="restart-btn" onclick="restart()">← Build another roadmap</button>
+  </div>
+
+  <footer class="footer">
+    Powered by <a href="https://github.com/marketplace/models" target="_blank">GitHub Models</a> (Azure AI Foundry) &nbsp;·&nbsp; Built for Microsoft Agents League Hackathon 2026
+  </footer>
+</section>
+
+<!-- CHATBOT -->
+<button class="chat-fab" onclick="toggleChat()" id="chatFab" title="Ask PathfinderAI">
+  💬<div class="chat-badge"></div>
+</button>
+<div class="chat-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-header-icon">🧭</div>
+    <div class="chat-header-text">
+      <div class="chat-header-name">PathfinderAI Chat</div>
+      <div class="chat-header-status">● Online — Ask me anything</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">Hi! 👋 I'm PathfinderAI. Ask me anything about your roadmap, career advice, or what to study next!</div>
+  </div>
+  <div class="chat-suggestions" id="chatSuggestions">
+    <div class="chat-sug" onclick="sendSuggestion(this)">Where do I start?</div>
+    <div class="chat-sug" onclick="sendSuggestion(this)">Best DSA resources?</div>
+    <div class="chat-sug" onclick="sendSuggestion(this)">How to get internships?</div>
+    <div class="chat-sug" onclick="sendSuggestion(this)">How many hours to study?</div>
+  </div>
+  <div class="chat-input-wrap">
+    <textarea class="chat-input" id="chatInput" placeholder="Ask anything..." rows="1"
+      onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}"
+      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+    <button class="chat-send" onclick="sendChat()" id="chatSendBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+let selectedGoals = [];
+let selectedSkills = [];
+let customGoals = [];
+let customSkills = [];
+let chatHistory = [];
+let currentProfile = null;
+let currentRoadmap = null;
+let chatOpen = false;
+
+// ── CHIP TOGGLE ──
+function toggleChip(el, type) {
+  const val = el.dataset.val;
+  if (type === 'goals') {
+    if (selectedGoals.includes(val)) {
+      selectedGoals = selectedGoals.filter(g => g !== val);
+      el.classList.remove('selected');
+    } else {
+      selectedGoals.push(val);
+      el.classList.add('selected');
+    }
+  } else {
+    if (selectedSkills.includes(val)) {
+      selectedSkills = selectedSkills.filter(s => s !== val);
+      el.classList.remove('selected','selected-skill');
+    } else {
+      selectedSkills.push(val);
+      el.classList.add('selected-skill');
+    }
+  }
+}
+
+// ── OTHER INPUT ──
+function showOther(type) {
+  const wrap = type === 'goals' ? document.getElementById('goalOtherWrap') : document.getElementById('skillOtherWrap');
+  wrap.classList.add('show');
+  const input = type === 'goals' ? document.getElementById('goalOtherInput') : document.getElementById('skillOtherInput');
+  input.focus();
+}
+
+function addOther(type) {
+  const isGoal = type === 'goals';
+  const input = document.getElementById(isGoal ? 'goalOtherInput' : 'skillOtherInput');
+  const val = input.value.trim();
+  if (!val) return;
+
+  if (isGoal) {
+    if (customGoals.includes(val)) return;
+    customGoals.push(val);
+    selectedGoals.push(val);
+    renderCustomChips('goals');
+  } else {
+    if (customSkills.includes(val)) return;
+    customSkills.push(val);
+    selectedSkills.push(val);
+    renderCustomChips('skills');
+  }
+  input.value = '';
+}
+
+function renderCustomChips(type) {
+  const isGoal = type === 'goals';
+  const arr = isGoal ? customGoals : customSkills;
+  const container = document.getElementById(isGoal ? 'goalCustomChips' : 'skillCustomChips');
+  container.innerHTML = arr.map((v, i) => `
+    <div class="custom-chip">
+      ${v}
+      <span class="custom-chip-remove" onclick="removeCustom('${type}',${i})">✕</span>
+    </div>`).join('');
+}
+
+function removeCustom(type, idx) {
+  const isGoal = type === 'goals';
+  const arr = isGoal ? customGoals : customSkills;
+  const selArr = isGoal ? selectedGoals : selectedSkills;
+  const val = arr[idx];
+  arr.splice(idx, 1);
+  const si = selArr.indexOf(val);
+  if (si > -1) selArr.splice(si, 1);
+  renderCustomChips(type);
+}
+
+// Allow pressing Enter in other input
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('goalOtherInput').addEventListener('keydown', e => { if(e.key==='Enter') addOther('goals'); });
+  document.getElementById('skillOtherInput').addEventListener('keydown', e => { if(e.key==='Enter') addOther('skills'); });
+});
+
+// ── VALIDATION ──
+function validateForm() {
+  const errorMsg = document.getElementById('errorMsg');
+  errorMsg.style.display = 'none';
+  const nameEl = document.getElementById('name');
+  const skillsEl = document.getElementById('skills');
+  [nameEl, skillsEl].forEach(el => el.classList.remove('invalid'));
+
+  if (!nameEl.value.trim()) {
+    nameEl.classList.add('invalid'); nameEl.focus();
+    errorMsg.textContent = '⚠ Please enter your name.';
+    errorMsg.style.display = 'block'; return false;
+  }
+  if (!skillsEl.value.trim()) {
+    skillsEl.classList.add('invalid'); skillsEl.focus();
+    errorMsg.textContent = '⚠ Please describe your current skills.';
+    errorMsg.style.display = 'block'; return false;
+  }
+  if (selectedGoals.length === 0) {
+    errorMsg.textContent = '⚠ Please select at least one goal.';
+    errorMsg.style.display = 'block'; return false;
+  }
+  return true;
+}
+
+// ── GENERATE ──
+async function generateRoadmap() {
+  if (!validateForm()) return;
+  const btn = document.getElementById('generateBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const studentName = document.getElementById('name').value.trim();
+  errorMsg.style.display = 'none';
+
+  document.getElementById('loadingTitle').textContent = `Building ${studentName}'s roadmap...`;
+  document.getElementById('ls1').textContent = `⟳ Analysing ${studentName}'s current skills...`;
+  document.getElementById('ls2').textContent = `⟳ Identifying skill gaps for your goals...`;
+  document.getElementById('ls3').textContent = `⟳ Curating free resources just for you...`;
+  document.getElementById('ls4').textContent = `⟳ Writing your week-by-week plan...`;
+
+  currentProfile = {
+    name: studentName,
+    year: document.getElementById('year').value,
+    college: document.getElementById('college').value || 'Not specified',
+    currentCountry: document.getElementById('currentCountry').value || null,
+    aspiringCountry: document.getElementById('aspiringCountry').value || null,
+    skills: document.getElementById('skills').value,
+    goals: selectedGoals,
+    skillsToLearn: selectedSkills,
+    target: document.getElementById('target').value,
+    hoursPerDay: document.getElementById('hoursPerDay').value,
+    timeline: document.getElementById('timeline').value,
+    context: document.getElementById('context').value,
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+  document.getElementById('formCard').style.display = 'none';
+  document.getElementById('loading').classList.add('show');
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 125000);
+
+  try {
+    const response = await fetch('/generate-roadmap', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(currentProfile),
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
+    const result = await response.json();
+    if (!result.success) throw new Error(result.error);
+    currentRoadmap = result.roadmap;
+    displayRoadmap(result.roadmap);
+  } catch (err) {
+    clearTimeout(timeoutId);
+    const msg = err.name==='AbortError' ? 'Request timed out. Please try again.' : err.message;
+    errorMsg.textContent = '⚠ ' + msg;
+    errorMsg.style.display = 'block';
+    document.getElementById('formCard').style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = '✦ Generate My Roadmap';
+    document.getElementById('loading').classList.remove('show');
+  }
+}
+
+// ── RESOURCE ICON HELPER ──
+function getResIcon(type) {
+  const t = (type||'').toLowerCase();
+  if (t.includes('youtube')) return {cls:'youtube', icon:'▶'};
+  if (t.includes('course')) return {cls:'course', icon:'🎓'};
+  if (t.includes('book')) return {cls:'book', icon:'📖'};
+  return {cls:'website', icon:'🔗'};
+}
+
+// ── DISPLAY ROADMAP ──
+function displayRoadmap(r) {
+  document.getElementById('loading').classList.remove('show');
+  document.getElementById('heroSection').style.display = 'none';
+  document.title = `${r.studentName}'s Roadmap — PathfinderAI`;
+
+  document.getElementById('outputGoal').textContent = '→ ' + r.goal;
+  document.getElementById('outputName').textContent = r.studentName + "'s Roadmap";
+  document.getElementById('outputSummary').textContent = r.summary;
+
+  if (r.roadmapDescription) {
+    document.getElementById('outputDescription').innerHTML =
+      '<strong>About this roadmap:</strong> ' + r.roadmapDescription;
+  }
+
+  document.getElementById('statWeeks').textContent = r.timelineWeeks;
+  document.getElementById('statGaps').textContent = r.gapAnalysis.length;
+  let totalRes = 0;
+  r.weeks.forEach(w => totalRes += (w.resources||[]).length);
+  document.getElementById('statResources').textContent = totalRes;
+
+  // Reasoning
+  if (r.reasoning) {
+    document.getElementById('r1').textContent = r.reasoning.step1_profile || '';
+    document.getElementById('r2').textContent = r.reasoning.step2_gaps || '';
+    document.getElementById('r3').textContent = r.reasoning.step3_strategy || '';
+    document.getElementById('r4').textContent = r.reasoning.step4_timeline || '';
+    [1,2,3,4].forEach((n,i) => {
+      setTimeout(() => document.getElementById(`rs${n}`).classList.add('visible'), i*400);
+    });
+  }
+
+  // Gap tags
+  const gapNames = r.gapAnalysis.map(g => typeof g==='string' ? g : g.skill);
+  document.getElementById('outputGaps').innerHTML = gapNames.map(g =>
+    `<span class="gap-tag">${g}</span>`).join('');
+
+  // Progress bars
+  document.getElementById('outputProgress').innerHTML = r.gapAnalysis.map((g,i) => {
+    const skill   = typeof g==='string' ? g : g.skill;
+    const current = typeof g==='object' ? (g.currentPercent||0) : 0;
+    const target  = typeof g==='object' ? (g.targetPercent||80) : 80;
+    const reason  = typeof g==='object' ? g.reason : '';
+    return `
+    <div class="progress-track">
+      <div class="progress-track-top">
+        <span class="progress-track-label">${skill}</span>
+        <span class="progress-pct">${current}% → ${target}%</span>
+      </div>
+      ${reason?`<div class="progress-reason">${reason}</div>`:''}
+      <div class="progress-bar-container">
+        <div class="progress-fill-target" id="pt-${i}" style="width:0%"></div>
+        <div class="progress-fill-current" id="pc-${i}" style="width:0%"></div>
+      </div>
+      <div class="progress-legend">
+        <span><span class="legend-dot" style="background:var(--muted)"></span>You now: ${current}%</span>
+        <span><span class="legend-dot" style="background:var(--accent);opacity:0.6"></span>Target: ${target}%</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    r.gapAnalysis.forEach((g,i) => {
+      const c = typeof g==='object'?(g.currentPercent||0):0;
+      const t = typeof g==='object'?(g.targetPercent||80):80;
+      const pt = document.getElementById(`pt-${i}`);
+      const pc = document.getElementById(`pc-${i}`);
+      if(pt) pt.style.width=t+'%';
+      if(pc) pc.style.width=c+'%';
+    });
+  }, 300);
+
+  // Weeks with improved resource cards
+  document.getElementById('outputWeeks').innerHTML = r.weeks.map((w,i) => {
+    const resCount = (w.resources||[]).length;
+    const resourcesHTML = resCount ? `
+      <div class="tasks-label">Free Resources</div>
+      <div class="resources-list">
+        ${w.resources.map(res => {
+          const {cls, icon} = getResIcon(res.type);
+          const domain = (() => { try { return new URL(res.url).hostname.replace('www.',''); } catch(e){ return res.url; } })();
+          return `<a href="${res.url}" target="_blank" rel="noopener" class="resource-card">
+            <div class="resource-icon ${cls}">${icon}</div>
+            <div class="resource-body">
+              <div class="resource-title">${res.name}</div>
+              <div class="resource-meta">
+                <span class="resource-type-badge">${res.type||'Resource'}</span>
+                <span class="resource-link-text">${domain}</span>
+              </div>
+            </div>
+            <span class="resource-arrow">→</span>
+          </a>`;
+        }).join('')}
+      </div>` : '';
+
+    return `
+    <div class="week-card">
+      <div class="week-header" onclick="toggleWeek(${i})">
+        <span class="week-number">WEEK ${w.weekNumber}</span>
+        <span class="week-title">${w.title}</span>
+        ${resCount>0?`<span class="week-res-count">${resCount} resource${resCount>1?'s':''}</span>`:''}
+        <span class="week-toggle ${i===0?'open':''}" id="toggle-${i}">▾</span>
+      </div>
+      <div class="week-focus">${w.focus}</div>
+      <div class="week-body ${i===0?'open':''}" id="week-body-${i}">
+        <div class="tasks-label">This week's tasks</div>
+        <ul class="task-list">${w.tasks.map((t,ti)=>`
+          <li>
+            <input type="checkbox" class="task-check" id="task-${i}-${ti}" aria-label="${t}" />
+            <label for="task-${i}-${ti}" style="cursor:pointer">${t}</label>
+          </li>`).join('')}</ul>
+        ${resourcesHTML}
+        <div class="milestone">✓ ${w.milestone}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Tips
+  const icons=['💡','🎯','⚡','🔥','📌','🚀'];
+  document.getElementById('outputTips').innerHTML = r.tips.map((t,i)=>`
+    <div class="tip-card"><span class="tip-icon">${icons[i%icons.length]}</span><span>${t}</span></div>`).join('');
+
+  document.getElementById('outputMotivation').textContent = r.motivationalMessage;
+  document.getElementById('roadmapSection').style.display = 'block';
+
+  document.getElementById('chatSuggestions').innerHTML = `
+    <div class="chat-sug" onclick="sendSuggestion(this)">Explain my Week 1</div>
+    <div class="chat-sug" onclick="sendSuggestion(this)">What should I do first?</div>
+    <div class="chat-sug" onclick="sendSuggestion(this)">Best LeetCode tips?</div>
+    <div class="chat-sug" onclick="sendSuggestion(this)">How to stay consistent?</div>`;
+
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleWeek(i) {
+  document.getElementById(`week-body-${i}`).classList.toggle('open');
+  document.getElementById(`toggle-${i}`).classList.toggle('open');
+}
+
+function restart() {
+  document.getElementById('roadmapSection').style.display = 'none';
+  document.getElementById('heroSection').style.display = 'flex';
+  document.getElementById('formCard').style.display = 'block';
+  document.getElementById('generateBtn').disabled = false;
+  document.getElementById('generateBtn').textContent = '✦ Generate My Roadmap';
+  document.title = 'PathfinderAI — Your CS Career Roadmap';
+  currentRoadmap = null; currentProfile = null; chatHistory = [];
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── CHATBOT ──
+function toggleChat() {
+  chatOpen = !chatOpen;
+  document.getElementById('chatWindow').classList.toggle('open', chatOpen);
+  document.getElementById('chatFab').innerHTML = chatOpen
+    ? '✕<div class="chat-badge"></div>'
+    : '💬<div class="chat-badge"></div>';
+  if (chatOpen) setTimeout(() => document.getElementById('chatInput').focus(), 200);
+}
+
+function sendSuggestion(el) {
+  document.getElementById('chatInput').value = el.textContent;
+  sendChat();
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const sendBtn = document.getElementById('chatSendBtn');
+  input.value = ''; input.style.height = 'auto';
+  sendBtn.disabled = true;
+  appendChatMsg(msg, 'user');
+  chatHistory.push({role:'user', content: msg});
+  document.getElementById('chatSuggestions').style.display = 'none';
+  const typingEl = appendChatMsg('Thinking...', 'bot typing');
+  try {
+    const res = await fetch('/chat', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({messages: chatHistory, profile: currentProfile, roadmap: currentRoadmap})
+    });
+    const result = await res.json();
+    typingEl.remove();
+    if (result.success) {
+      appendChatMsg(result.reply, 'bot');
+      chatHistory.push({role:'assistant', content: result.reply});
+    } else {
+      appendChatMsg('Sorry, something went wrong. Please try again.', 'bot');
+    }
+  } catch(e) {
+    typingEl.remove();
+    appendChatMsg('Connection error. Please try again.', 'bot');
+  }
+  sendBtn.disabled = false;
+}
+
+function appendChatMsg(text, type) {
+  const msgs = document.getElementById('chatMessages');
+  const el = document.createElement('div');
+  el.className = 'chat-msg ' + type;
+  el.textContent = text;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+  return el;
+}
+</script>
+</body>
+</html>
